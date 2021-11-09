@@ -22,7 +22,18 @@ namespace ComplexModelbinding.Controllers
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Courses.ToListAsync());
+            List<CourseIndexViewModel> courseData = await (from c in _context.Courses
+                             join instructor in _context.Instructors
+                                on c.Instructor.Id equals instructor.Id
+                             orderby c.Title
+                             select new CourseIndexViewModel
+                             {
+                                 CourseId = c.Id,
+                                 CourseTitle = c.Title,
+                                 InstructorName = instructor.FullName
+                             }).ToListAsync();
+
+            return View(courseData);
         }
 
         // GET: Courses/Details/5
