@@ -60,10 +60,21 @@ namespace ComplexModelbinding.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(course);
+                Course newCourse = new()
+                {
+                    Description = course.Description,
+                    Title = course.Title,
+                    Instructor = new Instructor()
+                    {
+                        Id = course.ChosenInstructor
+                    }
+                };
+
+                _context.Add(newCourse);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            course.AllAvailableInstructors = _context.Instructors.OrderBy(i => i.FullName).ToList();
             return View(course);
         }
 
