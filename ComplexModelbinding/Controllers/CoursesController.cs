@@ -70,6 +70,9 @@ namespace ComplexModelbinding.Controllers
                     }
                 };
 
+                // Tell EF that we have not modified the existing instructor
+                _context.Entry(newCourse.Instructor).State = EntityState.Unchanged;
+
                 _context.Add(newCourse);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
